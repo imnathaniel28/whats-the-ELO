@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "whats-the-elo"
+version = "1.0.0"
+description = "Headless Elo prediction from a single chess game (PGN + Stockfish -> rating)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+
+# The prediction core only. onnxruntime replaces PyTorch here: the model is
+# exported to a 443 KB ONNX graph, which keeps the install ~50 MB instead of
+# the ~2.5 GB a torch install costs.
+dependencies = [
+    "numpy>=1.24",
+    "onnxruntime>=1.16",
+    "chess>=1.10",
+]
+
+[project.optional-dependencies]
+# Everything needed to run the HTTP service.
+service = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+]
+dev = [
+    "pytest>=7.4",
+    "httpx>=0.26",
+]
+# Only needed to re-export model.onnx from the original .pt weights.
+export = [
+    "torch>=2.0",
+    "onnx>=1.15",
+]
+
+[tool.setuptools.packages.find]
+include = ["whats_the_elo*"]
+
+[tool.setuptools.package-data]
+whats_the_elo = ["model.onnx"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "engine: requires a working Stockfish binary (set STOCKFISH_PATH)",
+]

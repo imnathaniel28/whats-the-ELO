@@ -1,0 +1,32 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+
+.venv/
+venv/
+env/
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+.idea/
+.vscode/
+.DS_Store
+
+# Never commit an engine binary: Stockfish is ~114 MB (over GitHub's file
+# limit) and GPLv3. It is installed by the Dockerfile or found on PATH.
+stockfish
+stockfish.exe
+*.nnue
+
+# The ONNX model in whats_the_elo/ is intentionally tracked (443 KB).
+# Original torch weights are not needed at runtime.
+*.pt
+*.pth
+
+.env
+*.local

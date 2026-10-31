@@ -1,0 +1,27 @@
+services:
+  elo:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      # Seconds of Stockfish per position. The model was trained at 0.1; lower
+      # is faster but drifts from training conditions.
+      ELO_TIME_LIMIT: "0.1"
+      # Set this instead for reproducible output (a wall-clock limit is not
+      # deterministic). Roughly comparable to 0.1s on a modern core.
+      # ELO_NODE_LIMIT: "200000"
+      ELO_MAX_CONCURRENT: "2"
+      ELO_ENGINE_THREADS: "1"
+      ELO_MAX_PLIES: "300"
+      # Required if this port is reachable from anywhere but your own backend.
+      # ELO_API_KEY: "change-me"
+      # Only needed if browsers call the service directly.
+      # ELO_CORS_ORIGINS: "https://your-chess-site.example"
+    # Each concurrent analysis is one Stockfish process; keep the CPU
+    # reservation at or above ELO_MAX_CONCURRENT.
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1G
+    restart: unless-stopped
